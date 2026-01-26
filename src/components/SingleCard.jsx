@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import './SingleCard.css'
 
 export default function SingleCard({ card, handleChoice, flipped }) {
@@ -19,3 +20,12 @@ export default function SingleCard({ card, handleChoice, flipped }) {
         </div>
     )
 }
+
+SingleCard.propTypes = {
+    card: PropTypes.shape({
+        src: PropTypes.string.isRequired,
+        number: PropTypes.number.isRequired,
+    }).isRequired,
+    handleChoice: PropTypes.func.isRequired,
+    flipped: PropTypes.bool.isRequired,
+};

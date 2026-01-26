@@ -1,0 +1,70 @@
+.App {
+    max-width: 860px;
+    margin: 1px auto;
+    color: #FFfBFC;
+}
+
+.player1 {
+    position: absolute;
+    left: 75%;
+    top: 100px;
+    color: #FFfBFC;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.player2 {
+    position: absolute;
+    left: 85%;
+    top: 100px;
+    color: #FFfBFC;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.pts1 {
+    position: absolute;
+    left: 75%;
+    top: 150px;
+    color: #FFfBFC;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.pts2 {
+    position: absolute;
+    left: 85%;
+    top: 150px;
+    color: #FFfBFC;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.currentPlayer {
+    color: gold;
+}
+
+Button {
+    background: none;
+    border: 2px solid #FFfBFC;
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #FFfBFC;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 20px;
+}
+
+Button:hover {
+    background: #4f6d7a;
+    color: #FFfBFC;
+}
+
+.card-grid {
+    margin-top: 10px;
+    display: grid;
+    max-width: 500px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+}

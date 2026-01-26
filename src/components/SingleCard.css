@@ -1,0 +1,55 @@
+.flip-card {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    border: 2px solid #F2F4F3;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.inner-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: 6px;
+}
+
+.card .front {
+    transform: rotateY(90deg);
+    position: absolute;
+}
+
+.flipped .front {
+    transform: rotateY(0deg);
+}
+
+.card-number {
+    position: absolute;
+    /* Overlay the number on the back image */
+    top: 50%;
+    /* Center vertically */
+    left: 50%;
+    /* Center horizontally */
+    transform: translate(-50%, -50%);
+    /* Adjust centering properly */
+    font-size: 2rem;
+    /* Adjust as needed */
+    color: #F2F4F3;
+    /* Your "snow white" text color */
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    /* Adds contrast for readability */
+    pointer-events: none;
+    /* Prevent the number from being clickable */
+}

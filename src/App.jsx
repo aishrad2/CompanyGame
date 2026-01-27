@@ -1,23 +1,19 @@
 import { useState } from 'react'
 import './App.css'
-import ReactCardFlip from 'react-card-flip'
-import { Button } from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SingleCard from './components/SingleCard';
 
 
 function App() {
-  const [isFlipped, setIsFlipped] = useState(false);
   const [flippedCards, setFlippedCards] = useState([]);
   const [cards, setCards] = useState([]);
-  const [choice, setChoice] = useState(null);
-  const [players, setPlayers] = useState({
+  const [, setChoice] = useState(null);
+  const [players] = useState({
     player1: { name: "Player 1", points: 0 },
     player2: { name: "Player 2", points: 0 },
   });
   /**automatically player 1's turn */
   const [turn, setTurn] = useState(players.player1);
-  const [cashCount, setCCount] = useState(0);
 
   const cardImages = [
     { "src": "/img/cash.png" },

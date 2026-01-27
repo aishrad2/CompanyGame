@@ -8,12 +8,11 @@ function App() {
   const [flippedCards, setFlippedCards] = useState([]);
   const [cards, setCards] = useState([]);
   const [players, setPlayers] = useState({
-    player1: { name: "Player 1", points: 0 },
-    player2: { name: "Player 2", points: 0 },
+    player1: { name: "Player 1", points: 0, nextCashValue: 1000 },
+    player2: { name: "Player 2", points: 0, nextCashValue: 1000 },
   });
   /**automatically player 1's turn */
   const [turn, setTurn] = useState('player1');
-  const [cashValue, setCashValue] = useState(1000);
 
   const cardImages = [
     { "src": "/img/cash.png" },
@@ -45,10 +44,9 @@ function App() {
     setCards(shuffled)
     setFlippedCards([])
     setTurn('player1')
-    setCashValue(1000)
     setPlayers({
-      player1: { name: "Player 1", points: 0 },
-      player2: { name: "Player 2", points: 0 },
+      player1: { name: "Player 1", points: 0, nextCashValue: 1000 },
+      player2: { name: "Player 2", points: 0, nextCashValue: 1000 },
     })
   }
 
@@ -63,9 +61,12 @@ function App() {
     else if (card.src === "/img/cash.png") {
       setPlayers(prev => ({
         ...prev,
-        [turn]: { ...prev[turn], points: prev[turn].points + cashValue }
-      }))
-      setCashValue(cashValue + 1000)
+        [turn]: {
+          ...prev[turn],
+          points: prev[turn].points + prev[turn].nextCashValue,
+          nextCashValue: prev[turn].nextCashValue + 1000,
+        }
+      }));
     }
     else if (card.src === "/img/exchange.png") {
       setTurn(turn === 'player1' ? 'player2' : 'player1')

@@ -2,69 +2,64 @@
     max-width: 860px;
     margin: 1px auto;
     color: #FFfBFC;
+    text-align: center;
 }
 
-.player1 {
-    position: absolute;
-    left: 75%;
-    top: 100px;
-    color: #FFfBFC;
-    font-size: 24px;
+.players-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+}
+
+.player-box {
+    border: 2px solid #FFfBFC;
+    padding: 1rem;
+    border-radius: 8px;
+    width: 200px;
+}
+
+.player-box.currentPlayer {
+    border-color: gold;
+    box-shadow: 0 0 10px gold;
+}
+
+.player-box h2 {
+    margin: 0;
+}
+
+.player-box .pts {
+    font-size: 2rem;
+    margin: 0.5rem 0;
     font-weight: bold;
 }
 
-.player2 {
-    position: absolute;
-    left: 85%;
-    top: 100px;
-    color: #FFfBFC;
-    font-size: 24px;
-    font-weight: bold;
+.player-box .count {
+    margin: 0;
+    opacity: 0.8;
 }
 
-.pts1 {
-    position: absolute;
-    left: 75%;
-    top: 150px;
-    color: #FFfBFC;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.pts2 {
-    position: absolute;
-    left: 85%;
-    top: 150px;
-    color: #FFfBFC;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.currentPlayer {
-    color: gold;
-}
-
-Button {
+button {
     background: none;
     border: 2px solid #FFfBFC;
-    padding: 6px 12px;
+    padding: 10px 20px;
     border-radius: 4px;
     color: #FFfBFC;
     font-weight: bold;
     cursor: pointer;
-    font-size: 1em;
-    margin-top: 20px;
+    font-size: 1.2rem;
+    margin: 20px 0;
+    transition: all 0.2s;
 }
 
-Button:hover {
+button:hover {
     background: #4f6d7a;
     color: #FFfBFC;
 }
 
 .card-grid {
-    margin-top: 10px;
+    margin: 20px auto;
     display: grid;
     max-width: 500px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
 }

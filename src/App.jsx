@@ -1,23 +1,24 @@
 import { useState } from 'react'
 import './App.css'
-import ReactCardFlip from 'react-card-flip'
-import { Button } from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SingleCard from './components/SingleCard';
+import { cashPrompts, ladyItems } from './data/miniGames';
+import CashMiniGame from './components/CashMiniGame';
+import LadyMiniGame from './components/LadyMiniGame';
 
 
 function App() {
-  const [isFlipped, setIsFlipped] = useState(false);
   const [flippedCards, setFlippedCards] = useState([]);
   const [cards, setCards] = useState([]);
-  const [choice, setChoice] = useState(null);
   const [players, setPlayers] = useState({
-    player1: { name: "Player 1", points: 0 },
-    player2: { name: "Player 2", points: 0 },
+    player1: { name: "Player 1", points: 0, cashSuccessCount: 0 },
+    player2: { name: "Player 2", points: 0, cashSuccessCount: 0 },
   });
-  /**automatically player 1's turn */
-  const [turn, setTurn] = useState(players.player1);
-  const [cashCount, setCCount] = useState(0);
+  const [turnKey, setTurnKey] = useState('player1');
+
+  // Mini-game state
+  const [activeMiniGame, setActiveMiniGame] = useState(null); // 'cash' or 'lady'
+  const [miniGameData, setMiniGameData] = useState(null);
 
   const cardImages = [
     { "src": "/img/cash.png" },
@@ -45,53 +46,94 @@ function App() {
       .map((card, index) => ({ ...card, id: Math.random(), number: index + 1 }))
     setCards(shuffled)
     setFlippedCards([])
-    setTurn(players.player1)
-    players.player1.points = 0;
-    players.player2.points = 0;
+    setTurnKey('player1')
+    setPlayers({
+      player1: { name: "Player 1", points: 0, cashSuccessCount: 0 },
+      player2: { name: "Player 2", points: 0, cashSuccessCount: 0 },
+    })
+    setActiveMiniGame(null)
   }
 
   //handle choice
   const handleChoice = (card) => {
-    setChoice(card)
-    if (!flippedCards.find(c => c.id === card.id)) { // Prevent duplicate flips
-      setFlippedCards([...flippedCards, card]); // Add the card to flippedCards
-    }
+    if (activeMiniGame || flippedCards.find(c => c.id === card.id)) return;
+
+    setFlippedCards(prev => [...prev, card]);
+
     if (card.src === "/img/bomb.png") {
-      if (turn === players.player1) {
-        setTurn(players.player2)
-      }
-      else {
-        setTurn(players.player1)
-      }
+      setTurnKey(prev => prev === 'player1' ? 'player2' : 'player1');
     }
     else if (card.src === "/img/cash.png") {
-      turn.points += 50
+      const randomPrompt = cashPrompts[Math.floor(Math.random() * cashPrompts.length)];
+      setMiniGameData(randomPrompt);
+      setActiveMiniGame('cash');
     }
     else if (card.src === "/img/exchange.png") {
-      if (turn === players.player1) {
-        setTurn(players.player2)
-      }
-      else {
-        setTurn(players.player1)
-      }
-      const tempPoints = players.player1.points
-      players.player1.points = players.player2.points
-      players.player2.points = tempPoints
+      setPlayers(prev => ({
+        ...prev,
+        player1: { ...prev.player1, points: prev.player2.points },
+        player2: { ...prev.player2, points: prev.player1.points },
+      }));
+      setTurnKey(prev => prev === 'player1' ? 'player2' : 'player1');
     }
     else if (card.src === "/img/lady.png") {
-      turn.points -= 10
+      const shuffledItems = [...ladyItems].sort(() => 0.5 - Math.random()).slice(0, 4);
+      setMiniGameData(shuffledItems);
+      setActiveMiniGame('lady');
     }
+  }
 
+  const handleCashResult = (success) => {
+    if (success) {
+      setPlayers(prev => {
+        const currentPlayer = prev[turnKey];
+        const newSuccessCount = currentPlayer.cashSuccessCount + 1;
+        const addedPoints = 50 * newSuccessCount;
+        return {
+          ...prev,
+          [turnKey]: {
+            ...currentPlayer,
+            points: currentPlayer.points + addedPoints,
+            cashSuccessCount: newSuccessCount
+          }
+        };
+      });
+    } else {
+      // Turn ends on failure
+      setTurnKey(prev => prev === 'player1' ? 'player2' : 'player1');
+    }
+    setActiveMiniGame(null);
+  }
+
+  const handleLadyResult = (deduction) => {
+    setPlayers(prev => ({
+      ...prev,
+      [turnKey]: {
+        ...prev[turnKey],
+        points: Math.max(0, prev[turnKey].points - deduction)
+      }
+    }));
+    setActiveMiniGame(null);
   }
 
   return (
     <div className='App'>
       <h1>Company</h1>
       <button onClick={shufflecards}>New Game</button>
-      <h1 className={`player1 ${turn === players.player1 ? "currentPlayer" : ""}`}>Player1</h1>
-      <h1 className={`player2 ${turn === players.player2 ? "currentPlayer" : ""}`}>Player2</h1>
-      <h1 className='pts1'>{players.player1.points}</h1>
-      <h1 className='pts2'>{players.player2.points}</h1>
+
+      <div className="players-info">
+        <div className={`player-box ${turnKey === 'player1' ? "currentPlayer" : ""}`}>
+          <h2>{players.player1.name}</h2>
+          <p className='pts'>{players.player1.points}</p>
+          <p className='count'>Cash Cards: {players.player1.cashSuccessCount}</p>
+        </div>
+        <div className={`player-box ${turnKey === 'player2' ? "currentPlayer" : ""}`}>
+          <h2>{players.player2.name}</h2>
+          <p className='pts'>{players.player2.points}</p>
+          <p className='count'>Cash Cards: {players.player2.cashSuccessCount}</p>
+        </div>
+      </div>
+
       <div className="card-grid">
         {cards.map(card => (
           <SingleCard
@@ -102,6 +144,13 @@ function App() {
           />
         ))}
       </div>
+
+      {activeMiniGame === 'cash' && (
+        <CashMiniGame prompt={miniGameData} onResult={handleCashResult} />
+      )}
+      {activeMiniGame === 'lady' && (
+        <LadyMiniGame items={miniGameData} onResult={handleLadyResult} />
+      )}
     </div>
   )
 }
